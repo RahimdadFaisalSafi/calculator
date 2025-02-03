@@ -4,6 +4,27 @@ const Calculator = () => {
   const [display, setDisplay] = useState("");
   const [error, setError] = useState("");
 
+  const handleButtonClick = (value) => {
+    setError('')
+    setDisplay(prevDisplay => prevDisplay + value)
+  }
+
+  const calculateResult = () => {
+    try {
+        const result = Function(`"use strict"; return (${display})`)();
+        setDisplay(result.toString())
+        setError('')
+    } catch(err) {
+        setError('Invalid input')
+        setDisplay('')
+    }
+  }
+
+  const clearDisplay = () => {
+    setDisplay('')
+    setError('')
+  }
+
   const buttonStyle =
     "bg-gray-200 hover:bg-gray-300 p-4 rounded-lg text-xl font-semibold";
   const operatorStyle = "bg-orange-500 text-white hover:bg-orange-600";
@@ -51,7 +72,7 @@ const Calculator = () => {
           <button
             key={btn}
             onClick={
-              btn === "=" ? "calculateResult" : () => handleButtonClick(btn)
+              btn === "=" ? calculateResult : () => handleButtonClick(btn)
             }
             className={`${buttonStyle} ${
               ["+", "="].includes(btn) ? operatorStyle : ""
@@ -61,7 +82,7 @@ const Calculator = () => {
           </button>
         ))}
         <button
-          onClick={"clearDisplay"}
+          onClick={clearDisplay}
           className="col-span-4 bg-red-500 text-white hover:bg-red-600 p-6 rounded-lg text-xl font-bold"
         >
           Clear
